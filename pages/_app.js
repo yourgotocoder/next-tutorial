@@ -1,11 +1,10 @@
 import Head from "next/head";
 
 import "../styles/globals.css";
-import Layout from "../components/layout/layout";
 
 function MyApp({ Component, pageProps }) {
     return (
-        <Layout>
+        <>
             <Head>
                 <meta
                     name="viewport"
@@ -13,7 +12,7 @@ function MyApp({ Component, pageProps }) {
                 />
             </Head>
             <Component {...pageProps} />
-        </Layout>
+        </>
     );
 }
 
