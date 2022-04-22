@@ -12,7 +12,9 @@ const HomePage = (props) => {
     );
 };
 
-export async function getStaticProps() {
+export async function getStaticProps(context) {
+    console.log("Regenerating");
+
     const fs = await import("fs/promises");
     const path = await import("path");
 
@@ -25,6 +27,8 @@ export async function getStaticProps() {
         props: {
             products: data.products,
         },
+        revalidate: 10,
+        notFound: data.length === 0,
     };
 }
 
