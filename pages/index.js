@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const HomePage = (props) => {
     const { products } = props;
@@ -6,15 +7,15 @@ const HomePage = (props) => {
     return (
         <ul>
             {products.map((product) => (
-                <li key={product.id}>{product.title}</li>
+                <li key={product.id}>
+                    <Link href={`/${product.id}`}>{product.title}</Link>
+                </li>
             ))}
         </ul>
     );
 };
 
 export async function getStaticProps(context) {
-    console.log("Regenerating");
-
     const fs = await import("fs/promises");
     const path = await import("path");
 
