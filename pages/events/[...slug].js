@@ -1,11 +1,11 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import EventList from "../../components/events/EventList";
-import { getFilteredEvents } from "../../helpers/api-util";
 import ResultsTitle from "../../components/events/results-title";
 import Button from "../../components/UI/Button";
 import ErrorAlert from "../../components/UI/error-alert";
 import useSWR from "swr";
+import Head from "next/head";
 
 const EventsFilterPage = (props) => {
   const [loadedEvents, setLoadedEvents] = useState([]);
@@ -56,6 +56,10 @@ const EventsFilterPage = (props) => {
   ) {
     return (
       <>
+        <Head>
+          <title>Filtered Event</title>
+          <meta content={`All events for ${numMonth}/${numYear}`} name="description" />
+        </Head>
         <ErrorAlert>Invalid filter, please adjust your values</ErrorAlert>
         <div className="centre">
           <Button link="/events">Show All Events</Button>
