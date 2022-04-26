@@ -1,5 +1,19 @@
-function handler(req, res) {
+import {
+    connectDatabase,
+    getAllDocuments,
+    insertDocument,
+} from "../../../helpers/db-util";
+
+async function handler(req, res) {
     const { eventId } = req.query;
+
+    let client;
+    try {
+        client = await connectDatabase();
+    } catch (err) {
+        res.status(500).json({ message: "Database connection failed" });
+        return;
+    }
 
     if (req.method === "POST") {
         const { email, name, text } = req.body;
@@ -12,32 +26,49 @@ function handler(req, res) {
             text.trim() === ""
         ) {
             res.status(422).json({ message: "Invalid input" });
+            client.close();
             return;
         }
-        console.log(email, name, text);
+
         const newComment = {
-            id: new Date().toISOString(),
+            eventId,
             email,
             name,
             text,
         };
-        res.status(201).json({
-            message: "Comment addded successfully",
-            comment: newComment,
-        });
+
+        let result;
+        try {
+            result = await insertDocument(client, "comments", newComment);
+            newComment._id = result.insertedId;
+
+            res.status(201).json({
+                message: "Comment addded successfully",
+                comment: newComment,
+            });
+        } catch (err) {
+            res.status(500).json({ message: "Error inserting document" });
+        }
+
         //Add server side validation
     } else if (req.method === "GET") {
         //Send data
-        const dummy_list = [
-            { id: "c1", name: "Sudu", text: "A comment" },
-            { id: "c2", name: "Sudu Rai", text: "B comment" },
-            { id: "c3", name: "Su", text: "C comment" },
-        ];
-        res.status(200).json({
-            message: "Comments data",
-            comments: dummy_list,
-        });
+        let result;
+        try {
+            result = await getAllDocuments(client, "comments", { _id: -1 });
+            const filteredEvents = result.filter(
+                (event) => event.eventId === eventId
+            );
+            res.status(200).json({
+                message: "Comments data",
+                comments: filteredEvents,
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(500).json({ message: "Error getting response" });
+        }
     }
+    client.close();
 }
 
 export default handler;
