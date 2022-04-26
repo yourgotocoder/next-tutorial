@@ -17,11 +17,6 @@ function MyApp({ Component, pageProps }) {
                     />
                 </Head>
                 <Component {...pageProps} />
-                <Notification
-                    title="Test"
-                    message="This is a test"
-                    status="pending"
-                />
             </Layout>
         </NotificationContextProvider>
     );
