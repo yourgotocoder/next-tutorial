@@ -15,7 +15,7 @@ function Comments(props) {
 
     useEffect(() => {
         if (showComments) {
-            fetch("/api/comments/" + props.eventId)
+            fetch("/api/comments/" + eventId)
                 .then((response) => response.json())
                 .then((data) => {
                     console.log(data);
